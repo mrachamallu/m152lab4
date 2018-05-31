@@ -84,10 +84,30 @@ begin
     end
 end    
 
-randomGen randomGen(clk, stop1, reset, randNum1);
-randomGen1 randomGen1(clk, stop2, reset, randNum2);
-randomGen2 randomGen2(clk, stop3, reset, randNum3);
-randomGen3 randomGen3(clk, stop4, reset, randNum4);
+randomGen randomGen(
+    .clk(clk), 
+    .stop(stop1), 
+    .reset(reset), 
+    .randNum(randNum1)
+    );
+randomGen1 randomGen1(
+    .clk(clk), 
+    .stop(stop2), 
+    .reset(reset), 
+    .randNum(randNum2)
+    );
+randomGen3 randomGen3(
+    .clk(clk), 
+    .stop(stop3), 
+    .reset(reset), 
+    .randNum(randNum3)
+    );
+randomGen4 randomGen4(
+    .clk(clk), 
+    .stop(stop4), 
+    .reset(reset), 
+    .randNum(randNum4)
+    );
 
 
 
