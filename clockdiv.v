@@ -22,11 +22,12 @@ module clockdiv(
 	input wire clk,		//master clock: 50MHz
 	input wire clr,		//asynchronous reset
 	output wire dclk,		//pixel clock: 25MHz
-	output wire segclk	//7-segment clock: 381.47Hz
+	output wire segclk,	//7-segment clock: 381.47Hz
+	output wire slotclk
 	);
 
 // 17-bit counter variable
-reg [17:0] q;
+reg [22:0] q;
 
 // Clock divider --
 // Each bit in q is a clock signal that is
@@ -41,10 +42,14 @@ begin
 		q <= q + 1;
 end
 
-// 50Mhz ÷ 2^17 = 381.47Hz
+// 50Mhz ï¿½ 2^17 = 381.47Hz //its actually 100 Mhz, may need to change if wonky
 assign segclk = q[17];
 
-// 50Mhz ÷ 2^1 = 25MHz
+// 50Mhz ï¿½ 2^1 = 25MHz
 assign dclk = q[1];
+
+
+//100Mhz / 2^22 = 25 Hz
+assign slotclk = q[22];
 
 endmodule

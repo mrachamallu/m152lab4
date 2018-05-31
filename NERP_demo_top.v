@@ -54,17 +54,21 @@ wire [3:0] num2;
 wire [3:0] num3;
 wire [3:0] num4;
 
+reg balance;
+
 wire rst; //reset
 wire pause; //pause
 
-wire clk50HzW;
-wire clk700HzW;
+//wire clk50HzW;
+//wire clk700HzW;
 	
 // 7-segment clock interconnect
 wire segclk;
 
 // VGA display clock interconnect
 wire dclk;
+
+wire slotclk;
 
 // disable the 7-segment decimal points
 assign dp = 1;
@@ -74,7 +78,8 @@ clockdiv U1(
 	.clk(clk),
 	.clr(clr),
 	.segclk(segclk),
-	.dclk(dclk)
+	.dclk(dclk),
+	.slotclk(slotclk)
 	);
 
 // 7-segment display controller
@@ -100,6 +105,7 @@ vga640x480 U3(
 	.topMid(sign),
 	.dclk(dclk),
 	.clr(clr),
+	.balance(balance),
 	.hsync(hsync),
 	.vsync(vsync),
 	.red(vgaRed),
@@ -107,8 +113,8 @@ vga640x480 U3(
 	.blue(vgaBlue)
 	);
 
-divider divider(clk, clk50HzW, clk700HzW
-    );
+//divider divider(clk, clk50HzW, clk700HzW
+  //  );
     
 debouncer debouncer(
     .btnP(btnP),
@@ -129,7 +135,7 @@ display display(
     );
  
 randomGenTop randomGenTop(
-    .clk (clk50HzW), 
+    .clk (slotclk), 
     .reset (rst),
     .stopInt (pause), 
     .randNum1 (num1), 
@@ -137,4 +143,20 @@ randomGenTop randomGenTop(
     .randNum3 (num3), 
     .randNum4 (num4) 
     ); 
+
+
+bank bank(
+	.clk(clk), 
+	.b1(b1), 
+	.b10(b10), 
+	.b50(b50), 
+	.b100(b100), 
+	.randNum1(num1), 
+	.randNum2(num2), 
+	.randNum3(num3), 
+	.randNum4(num4), 
+	.rst(rst), 
+	.balance(balance)
+	);
+
 endmodule

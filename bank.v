@@ -1,57 +1,38 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    12:53:39 05/25/2018 
-// Design Name: 
-// Module Name:    bank 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
-/*module bankDisplay( topMid, topR, topL, botR, botL, botMid, mid );
+module bank(clk, b1, b10, b50, b100, randNum1, randNum2, randNum3, randNum4, rst, balance);
 
-output [1:0] topMid;
-output [1:0] topR;
-output [1:0] topL;
-output [1:0] botR;
-output [1:0] botL;
-output [1:0] botMid;
-output [1:0] mid;
-reg [3:0] num = 0;
-//for each number 0-9, determine which segment on 7-seg display to light up
-case(num)
-	4'b0000:
-		begin
-			topMid = 1;
-			topR = 1;
-			topL = 1;
-			botR = 1;
-			botL = 1; 
-			botMid = 1;
-		end
-	4'b0001:
-		begin
-			topR = 1;
-			botR = 1;
-		end
-	4'b0010:
-		begin
-			topMid = 1;
-			topR = 1;
-			mid = 1;
-			botL = 1; 
-			botMid = 1;
-		end
-	endcase
+input clk;
+input b1; //the switches
+input b10;
+input b50;
+input b100;
+input [3:0] randNum1;
+input [3:0] randNum2;
+input [3:0] randNum3;
+input [3:0] randNum4;
+input rst;
+output reg[26:0] balance;
+reg[26:0] balanceR;
+
+always @(posedge clk)
+begin
+	 balance = balanceR;
+    if(rst)
+        balanceR = 100;
+    else if(randNum1 == randNum2 && randNum2 == randNum3 && randNum3 == randNum4)
+    begin
+        if(b1)
+            balanceR = balanceR + 1;
+        else if(b10)
+            balanceR = balanceR + 10;
+        else if(b50)
+            balanceR = balanceR + 50;
+        else if(b100)
+            balanceR = balanceR + 100;
+    end
+end
+
 endmodule
-*/
+
+
+
+

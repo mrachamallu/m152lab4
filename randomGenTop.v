@@ -85,9 +85,9 @@ begin
 end    
 
 randomGen randomGen(clk, stop1, reset, randNum1);
-randomGen1 randomGen1(clk, stop1, reset, randNum2);
-randomGen2 randomGen2(clk, stop1, reset, randNum3);
-randomGen3 randomGen3(clk, stop1, reset, randNum4);
+randomGen1 randomGen1(clk, stop2, reset, randNum2);
+randomGen2 randomGen2(clk, stop3, reset, randNum3);
+randomGen3 randomGen3(clk, stop4, reset, randNum4);
 
 
 
