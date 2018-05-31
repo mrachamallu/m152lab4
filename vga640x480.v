@@ -22,13 +22,14 @@ module vga640x480(
 	input wire topMid,
 	input wire dclk,			//pixel clock: 25MHz
 	input wire clr,			//asynchronous reset
+	input [26:0] balance,
 	output wire hsync,		//horizontal sync out
 	output wire vsync,		//vertical sync out
 	output reg [2:0] red,	//red vga output
 	output reg [2:0] green, //green vga output
 	output reg [1:0] blue	//blue vga output
 	);
-assign sign = topMid;
+//assign sign = topMid;
 // video structure constants
 parameter hpixels = 800;// horizontal pixels per line
 parameter vlines = 521; // vertical lines per frame
@@ -44,6 +45,107 @@ parameter vfp = 511; 	// beginning of vertical front porch
 // registers for storing the horizontal & vertical counters
 reg [9:0] hc;
 reg [9:0] vc;
+reg sign01;
+reg sign02;
+reg sign03;
+reg sign04;
+reg sign05;
+reg sign06;
+reg sign07;
+reg sign11;
+reg sign12;
+reg sign13;
+reg sign14;
+reg sign15;
+reg sign16;
+reg sign17;
+reg sign21;
+reg sign22;
+reg sign23;
+reg sign24;
+reg sign25;
+reg sign26;
+reg sign27;
+reg sign31;
+reg sign32;
+reg sign33;
+reg sign34;
+reg sign35;
+reg sign36;
+reg sign37;
+reg sign41;
+reg sign42;
+reg sign43;
+reg sign44;
+reg sign45;
+reg sign46;
+reg sign47;
+reg thousands;
+reg hundreds;
+reg tens;
+reg ones;
+reg [26:0] balanceI = balance;
+
+always @(posedge dclk)
+begin
+	thousands = balanceI % 1000;
+	balanceI = balanceI - thousands * 1000;
+	hundreds = balanceI % 100;
+balanceI = balanceI - hundreds * 100;
+	tens = balanceI % 10;
+	balanceI = balanceI - tens * 10;
+	ones = balanceI;
+	case(thousands)
+	4'b0000: seg = 8'b11000000; //0
+    	4'b0001: seg = 8'b11111001; //1
+    	4'b0010: seg = 8'b10100100; //2
+    	4'b0011: seg = 8'b10110000; //3
+    	4'b0100: seg = 8'b10011001; //4
+    	4'b0101: seg = 8'b10010010; //5
+    	4'b0110: seg = 8'b10000010; //6
+    	4'b0111: seg = 8'b11111000; //7
+    	4'b1000: seg = 8'b10000000; //8
+    	4'b1001: seg = 8'b10010000; //9
+	endcase
+	case(hundreds)
+	4'b0000: seg = 8'b11000000; //0
+    	4'b0001: seg = 8'b11111001; //1
+    	4'b0010: seg = 8'b10100100; //2
+    	4'b0011: seg = 8'b10110000; //3
+    	4'b0100: seg = 8'b10011001; //4
+    	4'b0101: seg = 8'b10010010; //5
+    	4'b0110: seg = 8'b10000010; //6
+    	4'b0111: seg = 8'b11111000; //7
+    	4'b1000: seg = 8'b10000000; //8
+    	4'b1001: seg = 8'b10010000; //9
+	endcase
+	case(tens)
+	4'b0000: seg = 8'b11000000; //0
+    	4'b0001: seg = 8'b11111001; //1
+    	4'b0010: seg = 8'b10100100; //2
+    	4'b0011: seg = 8'b10110000; //3
+    	4'b0100: seg = 8'b10011001; //4
+    	4'b0101: seg = 8'b10010010; //5
+    	4'b0110: seg = 8'b10000010; //6
+    	4'b0111: seg = 8'b11111000; //7
+    	4'b1000: seg = 8'b10000000; //8
+    	4'b1001: seg = 8'b10010000; //9
+	endcase
+	case(ones)
+	4'b0000: seg = 8'b11000000; //0
+    	4'b0001: seg = 8'b11111001; //1
+    	4'b0010: seg = 8'b10100100; //2
+    	4'b0011: seg = 8'b10110000; //3
+    	4'b0100: seg = 8'b10011001; //4
+    	4'b0101: seg = 8'b10010010; //5
+    	4'b0110: seg = 8'b10000010; //6
+    	4'b0111: seg = 8'b11111000; //7
+    	4'b1000: seg = 8'b10000000; //8
+    	4'b1001: seg = 8'b10010000; //9
+	endcase
+end
+
+	
 
 // Horizontal & vertical counters --
 // this is how we keep track of where we are on the screen.
@@ -111,49 +213,49 @@ begin
 
 		// display white bar
 		//top middle
-		if (hc >= hbp && hc < (hbp+80) && vc >= (vbp+255) && vc < (vbp+260) && (sign > 0) )
+		if (hc >= hbp && hc < (hbp+80) && vc >= (vbp+255) && vc < (vbp+260) && (sign01 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b11;
 		end
 		//top left
-		else if (hc >= hbp && hc < (hbp+5) && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= hbp && hc < (hbp+5) && vc >= (vbp+260) && vc < (vbp+335) && (sign02 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b11;
 		end	
 		//top right
-		else if (hc >= (hbp+75) && hc < (hbp+80) && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= (hbp+75) && hc < (hbp+80) && vc >= (vbp+260) && vc < (vbp+335) && (sign03 > 0))
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b11;
 		end	
 		//middle
-		else if (hc >= hbp && hc < (hbp+80) && vc >= (vbp+335) && vc < (vbp+340))
+		else if (hc >= hbp && hc < (hbp+80) && vc >= (vbp+335) && vc < (vbp+340)&& (sign04 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b11;
 		end
 		//bottome left
-		else if (hc >= hbp && hc < (hbp+5) && vc >= (vbp+340) && vc < (vbp+415))
+		else if (hc >= hbp && hc < (hbp+5) && vc >= (vbp+340) && vc < (vbp+415)&& (sign05 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b11;
 		end	
 		//bottome right
-		else if (hc >= (hbp+75) && hc < (hbp+80) && vc >= (vbp+340) && vc < (vbp+415))
+		else if (hc >= (hbp+75) && hc < (hbp+80) && vc >= (vbp+340) && vc < (vbp+415)&& (sign06 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b11;
 		end			
 		//bottom middle
-		else if (hc >= hbp && hc < (hbp+80) && vc >= (vbp+415) && vc < (vbp+420))
+		else if (hc >= hbp && hc < (hbp+80) && vc >= (vbp+415) && vc < (vbp+420)&& (sign07 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
@@ -165,49 +267,49 @@ begin
 		/////////////////////////////////////////////////
 		// display yellow bar
 		//top middle
-		else if (hc >= (hbp+80) && hc < (hbp+160) && vc >= (vbp+255) && vc < (vbp+260))
+		else if (hc >= (hbp+80) && hc < (hbp+160) && vc >= (vbp+255) && vc < (vbp+260)&& (sign11 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b00;
 		end
 		//top left
-		else if (hc >= (hbp+80) && hc < (hbp+80+5) && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= (hbp+80) && hc < (hbp+80+5) && vc >= (vbp+260) && vc < (vbp+335)&& (sign12 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b00;
 		end	
 		//top right
-		else if (hc >= (hbp+155) && hc < (hbp+160) && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= (hbp+155) && hc < (hbp+160) && vc >= (vbp+260) && vc < (vbp+335)&& (sign13 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b00;
 		end		
 		//middle
-		else if (hc >= (hbp+80) && hc < (hbp+160) && vc >= (vbp+335) && vc < (vbp+340))
+		else if (hc >= (hbp+80) && hc < (hbp+160) && vc >= (vbp+335) && vc < (vbp+340)&& (sign14 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b00;
 		end	
 		//bottom left
-		else if (hc >= (hbp+80) && hc < (hbp+80+5) && vc >= (vbp+340) && vc < (vbp+415))
+		else if (hc >= (hbp+80) && hc < (hbp+80+5) && vc >= (vbp+340) && vc < (vbp+415)&& (sign15 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b00;
 		end
 		//bottom right
-		else if (hc >= (hbp+155) && hc < (hbp+160) && vc >= (vbp+340) && vc < (vbp+415))
+		else if (hc >= (hbp+155) && hc < (hbp+160) && vc >= (vbp+340) && vc < (vbp+415)&& (sign16 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 2'b00;
 		end	
 		//bottom middle
-		else if (hc >= (hbp+80) && hc < (hbp+160) && vc >= (vbp+415) && vc < (vbp+420))
+		else if (hc >= (hbp+80) && hc < (hbp+160) && vc >= (vbp+415) && vc < (vbp+420)&& (sign17 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b111;
@@ -220,49 +322,49 @@ begin
 
 		// display cyan bar
 		//top middle
-		else if (hc >= (hbp+160) && hc < (hbp+240) && vc >= (vbp+255) && vc < (vbp+260))
+		else if (hc >= (hbp+160) && hc < (hbp+240) && vc >= (vbp+255) && vc < (vbp+260)&& (sign21 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b11;
 		end
 		//top left
-		else if (hc >= (hbp+160) && hc < (hbp+160+5)  && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= (hbp+160) && hc < (hbp+160+5)  && vc >= (vbp+260) && vc < (vbp+335)&& (sign22 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b11;
 		end	
 		//top right
-		else if (hc >= (hbp+235) && hc < (hbp+240)  && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= (hbp+235) && hc < (hbp+240)  && vc >= (vbp+260) && vc < (vbp+335)&& (sign23 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b11;
 		end				
 		//middle
-		else if (hc >= (hbp+160) && hc < (hbp+240) && vc >= (vbp+335) && vc < (vbp+340))
+		else if (hc >= (hbp+160) && hc < (hbp+240) && vc >= (vbp+335) && vc < (vbp+340)&& (sign24 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b11;
 		end		
 		//bottom left
-		else if (hc >= (hbp+160) && hc < (hbp+160+5) && vc >= (vbp+340) && vc < (vbp+415))
+		else if (hc >= (hbp+160) && hc < (hbp+160+5) && vc >= (vbp+340) && vc < (vbp+415)&& (sign25 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b11;
 		end			
 		//bottom right
-		else if (hc >= (hbp+235) && hc < (hbp+240) && vc >= (vbp+340) && vc < (vbp+415))
+		else if (hc >= (hbp+235) && hc < (hbp+240) && vc >= (vbp+340) && vc < (vbp+415)&& (sign26 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b11;
 		end			
 		//bottom middle
-		else if (hc >= (hbp+160) && hc < (hbp+240) && vc >= (vbp+415) && vc < (vbp+420))
+		else if (hc >= (hbp+160) && hc < (hbp+240) && vc >= (vbp+415) && vc < (vbp+420)&& (sign27 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
@@ -273,49 +375,49 @@ begin
         ///////////////////////////////
 		// display green bar
         //top middle
-		else if (hc >= (hbp+240) && hc < (hbp+320)&& vc >= (vbp+255) && vc < (vbp+260))
+		else if (hc >= (hbp+240) && hc < (hbp+320)&& vc >= (vbp+255) && vc < (vbp+260)&& (sign31 > 0))
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b00;
 		end
         //top left
- 		else if (hc >= (hbp+240) && hc < (hbp+240+5) && vc >= (vbp+260) && vc < (vbp+335))
+ 		else if (hc >= (hbp+240) && hc < (hbp+240+5) && vc >= (vbp+260) && vc < (vbp+335) && (sign32 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b00;
 		end
         //top right
- 		else if (hc >= (hbp+315) && hc < (hbp+320)  && vc >= (vbp+260) && vc < (vbp+335))
+ 		else if (hc >= (hbp+315) && hc < (hbp+320)  && vc >= (vbp+260) && vc < (vbp+335) && (sign33 > 0))
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b00;
 		end 
         //middle
-		else if (hc >= (hbp+240) && hc < (hbp+320) && vc >= (vbp+335) && vc < (vbp+340))
+		else if (hc >= (hbp+240) && hc < (hbp+320) && vc >= (vbp+335) && vc < (vbp+340) && (sign34 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b00;
 		end  
         //bottom left
- 		else if (hc >= (hbp+240) && hc < (hbp+240+5) && vc >= (vbp+340) && vc < (vbp+415))
+ 		else if (hc >= (hbp+240) && hc < (hbp+240+5) && vc >= (vbp+340) && vc < (vbp+415) && (sign35 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b00;
 		end   
         //bottom right
-  		else if (hc >= (hbp+315) && hc < (hbp+320) && vc >= (vbp+340) && vc < (vbp+415))
+  		else if (hc >= (hbp+315) && hc < (hbp+320) && vc >= (vbp+340) && vc < (vbp+415) && (sign36 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
 			blue = 2'b00;
 		end 
         //bottom middle
-		else if (hc >= (hbp+240) && hc < (hbp+320) && vc >= (vbp+415) && vc < (vbp+420))
+		else if (hc >= (hbp+240) && hc < (hbp+320) && vc >= (vbp+415) && vc < (vbp+420)&& (sign37 > 0) )
 		begin
 			red = 3'b000;
 			green = 3'b111;
@@ -327,49 +429,49 @@ begin
         /////////////////////////////////////
 		// display magenta bar
         //top middle
-		else if (hc >= (hbp+320) && hc < (hbp+400) && vc >= (vbp+255) && vc < (vbp+260))
+		else if (hc >= (hbp+320) && hc < (hbp+400) && vc >= (vbp+255) && vc < (vbp+260)&& (sign41 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
 			blue = 2'b11;
 		end
         //top left
-		else if (hc >= (hbp+320) && hc < (hbp+325) && vc >= (vbp+260) && vc < (vbp+335))
+		else if (hc >= (hbp+320) && hc < (hbp+325) && vc >= (vbp+260) && vc < (vbp+335) && (sign42 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
 			blue = 2'b11;
 		end
         //top right
- 		else if (hc >= (hbp+395) && hc < (hbp+400) && vc >= (vbp+260) && vc < (vbp+335))
+ 		else if (hc >= (hbp+395) && hc < (hbp+400) && vc >= (vbp+260) && vc < (vbp+335) && (sign43 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
 			blue = 2'b11;
 		end       
         // middle
-		else if (hc >= (hbp+320) && hc < (hbp+400) && vc >= (vbp+335) && vc < (vbp+340))
+		else if (hc >= (hbp+320) && hc < (hbp+400) && vc >= (vbp+335) && vc < (vbp+340) && (sign44 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
 			blue = 2'b11;
 		end
         //bottom left
- 		else if (hc >= (hbp+320) && hc < (hbp+325) && vc >= (vbp+340) && vc < (vbp+415))
+ 		else if (hc >= (hbp+320) && hc < (hbp+325) && vc >= (vbp+340) && vc < (vbp+415) && (sign45 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
 			blue = 2'b11;
 		end    
         //bottom right
-  		else if (hc >= (hbp+395) && hc < (hbp+400) && vc >= (vbp+340) && vc < (vbp+415))
+  		else if (hc >= (hbp+395) && hc < (hbp+400) && vc >= (vbp+340) && vc < (vbp+415) && (sign46 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
 			blue = 2'b11;
 		end          
         //bottom middle
-		else if (hc >= (hbp+320) && hc < (hbp+400) && vc >= (vbp+415) && vc < (vbp+420))
+		else if (hc >= (hbp+320) && hc < (hbp+400) && vc >= (vbp+415) && vc < (vbp+420) && (sign47 > 0) )
 		begin
 			red = 3'b111;
 			green = 3'b000;
@@ -416,6 +518,8 @@ begin
 end
 
 endmodule
+
+
 
 
 
