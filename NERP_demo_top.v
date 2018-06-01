@@ -54,7 +54,7 @@ wire [3:0] num2;
 wire [3:0] num3;
 wire [3:0] num4;
 
-reg balance;
+wire [26:0] balance;
 
 wire rst; //reset
 wire pause; //pause

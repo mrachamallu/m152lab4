@@ -50,29 +50,33 @@ begin
         stop2 <= 0;
         stop3 <= 0;
         stop4 <= 0;
+        cntr1 <= 0;
+        cntr2 <= 0;
+        cntr3 <= 0;
+        cntr4 <= 0;
     end
     else if(stopInt == 1)
     begin  
        // if(finalStop == 0)
        // begin  
-            if(cntr1 != 100 && cntr2 == 0 && cntr3 == 0 && cntr4 == 0)
+            if(cntr1 != 10 && cntr2 == 0 && cntr3 == 0 && cntr4 == 0)
                 cntr1 <= cntr1 + 1;
-            else if(cntr1 == 100 && cntr2 != 100 && cntr3 == 0 && cntr4 == 0)
+            else if(cntr1 == 10 && cntr2 != 10 && cntr3 == 0 && cntr4 == 0)
 				begin
                 cntr2 <= cntr2 + 1;
                 stop1 <= 1;
 				end
-            else if(cntr1 == 100 && cntr2 == 100 && cntr3 != 100 && cntr4 == 0)
+            else if(cntr1 == 10 && cntr2 == 10 && cntr3 != 10 && cntr4 == 0)
 				begin
                 cntr3 <= cntr3 + 1;
                 stop2 <= 1; 
 				end
-            else if(cntr1 == 100 && cntr2 == 100 && cntr3 == 100 && cntr4 != 100)
+            else if(cntr1 == 10 && cntr2 == 10 && cntr3 == 10 && cntr4 != 10)
 				begin
                 cntr4 <= cntr4 + 1;  
                 stop3 <= 1; 
 				end
-            else if(cntr1 == 100 && cntr2 == 100 && cntr3 == 100 && cntr4 == 100)
+            else if(cntr1 == 10 && cntr2 == 10 && cntr3 == 10 && cntr4 == 10)
             begin
                 stop4 <= 1;
                 cntr1 <= 0;
@@ -96,13 +100,13 @@ randomGen1 randomGen1(
     .reset(reset), 
     .randNum(randNum2)
     );
-randomGen3 randomGen3(
+randomGen2 randomGen2(
     .clk(clk), 
     .stop(stop3), 
     .reset(reset), 
     .randNum(randNum3)
     );
-randomGen4 randomGen4(
+randomGen3 randomGen3(
     .clk(clk), 
     .stop(stop4), 
     .reset(reset), 

@@ -22,7 +22,7 @@ module vga640x480(
 	input wire topMid,
 	input wire dclk,			//pixel clock: 25MHz
 	input wire clr,			//asynchronous reset
-	input [26:0] balance,
+	input wire [26:0] balance,
 	output wire hsync,		//horizontal sync out
 	output wire vsync,		//vertical sync out
 	output reg [2:0] red,	//red vga output
@@ -84,64 +84,421 @@ reg thousands;
 reg hundreds;
 reg tens;
 reg ones;
-reg [26:0] balanceI = balance;
+//reg [26:0] balanceI = balance;
 
 always @(posedge dclk)
 begin
-	thousands = balanceI % 1000;
-	balanceI = balanceI - thousands * 1000;
-	hundreds = balanceI % 100;
-balanceI = balanceI - hundreds * 100;
-	tens = balanceI % 10;
-	balanceI = balanceI - tens * 10;
-	ones = balanceI;
+	thousands <= balance % 1000;
+	hundreds <= (balance - thousands * 1000) % 100;
+	tens <= (balance - thousands * 1000 - hundreds * 100) % 10;
+	ones <= (balance - thousands*1000 - hundreds *100 - tens*10);
 	case(thousands)
-	4'b0000: seg = 8'b11000000; //0
-    	4'b0001: seg = 8'b11111001; //1
-    	4'b0010: seg = 8'b10100100; //2
-    	4'b0011: seg = 8'b10110000; //3
-    	4'b0100: seg = 8'b10011001; //4
-    	4'b0101: seg = 8'b10010010; //5
-    	4'b0110: seg = 8'b10000010; //6
-    	4'b0111: seg = 8'b11111000; //7
-    	4'b1000: seg = 8'b10000000; //8
-    	4'b1001: seg = 8'b10010000; //9
+		4'b0000: 
+		begin
+			sign04 = 0; //0
+			sign01 = 1;
+			sign02 = 1;
+			sign03 = 1;
+			sign05 = 1;
+			sign06 = 1;
+			sign07 = 1;
+		end
+    	4'b0001: 
+		begin
+			sign01 = 0;
+			sign02 = 0;
+			sign03 = 1;
+			sign04 = 0;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 0;
+		end
+    	4'b0010: 
+		begin
+			sign01 = 1;
+			sign02 = 0;
+			sign03 = 1;
+			sign04 = 1;
+			sign05 = 1
+			sign06 = 0;
+			sign07 = 1;
+		end
+    	4'b0011: 
+		begin
+			sign01 = 1;
+			sign02 = 0;
+			sign03 = 1;
+			sign04 = 1;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 1;
+		end
+    	4'b0100: 
+		begin
+			sign01 = 0;
+			sign02 = 1;
+			sign03 = 1;
+			sign04 = 1;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 1;
+		end
+    	4'b0101: 
+		begin
+			sign01 = 1;
+			sign02 = 1;
+			sign03 = 0;
+			sign04 = 1;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 1;
+		end
+    	4'b0110: 
+		begin
+			sign01 = 1;
+			sign02 = 1;
+			sign03 = 0;
+			sign04 = 1;
+			sign05 = 1;
+			sign06 = 1;
+			sign07 = 1;
+		end
+    	4'b0111: 
+		begin
+			sign01 = 1;
+			sign02 = 0;
+			sign03 = 1;
+			sign04 = 0;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 0;
+		end
+    	4'b1000:
+		begin
+			sign01 = 0;
+			sign02 = 1;
+			sign03 = 1;
+			sign04 = 1;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 1; 
+		end
+    	4'b1001: 
+		begin
+			sign01 = 1;
+			sign02 = 1;
+			sign03 = 1;
+			sign04 = 1;
+			sign05 = 0;
+			sign06 = 1;
+			sign07 = 0;
+		end
 	endcase
 	case(hundreds)
-	4'b0000: seg = 8'b11000000; //0
-    	4'b0001: seg = 8'b11111001; //1
-    	4'b0010: seg = 8'b10100100; //2
-    	4'b0011: seg = 8'b10110000; //3
-    	4'b0100: seg = 8'b10011001; //4
-    	4'b0101: seg = 8'b10010010; //5
-    	4'b0110: seg = 8'b10000010; //6
-    	4'b0111: seg = 8'b11111000; //7
-    	4'b1000: seg = 8'b10000000; //8
-    	4'b1001: seg = 8'b10010000; //9
+		4'b0000: 
+		begin
+			sign14 = 0; //0
+			sign11 = 1;
+			sign12 = 1;
+			sign13 = 1;
+			sign15 = 1;
+			sign16 = 1;
+			sign17 = 1;
+		end
+    	4'b0001: 
+		begin
+			sign11 = 0;
+			sign12 = 0;
+			sign13 = 1;
+			sign14 = 0;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 0;
+		end
+    	4'b0010: 
+		begin
+			sign11 = 1;
+			sign12 = 0;
+			sign13 = 1;
+			sign14 = 1;
+			sign15 = 1
+			sign16 = 0;
+			sign17 = 1;
+		end
+    	4'b0011: 
+		begin
+			sign11 = 1;
+			sign12 = 0;
+			sign13 = 1;
+			sign14 = 1;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 1;
+		end
+    	4'b0100: 
+		begin
+			sign11 = 0;
+			sign12 = 1;
+			sign13 = 1;
+			sign14 = 1;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 1;
+		end
+    	4'b0101: 
+		begin
+			sign11 = 1;
+			sign12 = 1;
+			sign13 = 0;
+			sign14 = 1;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 1;
+		end
+    	4'b0110: 
+		begin
+			sign11 = 1;
+			sign12 = 1;
+			sign13 = 0;
+			sign14 = 1;
+			sign15 = 1;
+			sign16 = 1;
+			sign17 = 1;
+		end
+    	4'b0111: 
+		begin
+			sign11 = 1;
+			sign12 = 0;
+			sign13 = 1;
+			sign14 = 0;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 0;
+		end
+    	4'b1000:
+		begin
+			sign11 = 0;
+			sign12 = 1;
+			sign13 = 1;
+			sign14 = 1;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 1; 
+		end
+    	4'b1001: 
+		begin
+			sign11 = 1;
+			sign12 = 1;
+			sign13 = 1;
+			sign14 = 1;
+			sign15 = 0;
+			sign16 = 1;
+			sign17 = 0;
+		end
 	endcase
 	case(tens)
-	4'b0000: seg = 8'b11000000; //0
-    	4'b0001: seg = 8'b11111001; //1
-    	4'b0010: seg = 8'b10100100; //2
-    	4'b0011: seg = 8'b10110000; //3
-    	4'b0100: seg = 8'b10011001; //4
-    	4'b0101: seg = 8'b10010010; //5
-    	4'b0110: seg = 8'b10000010; //6
-    	4'b0111: seg = 8'b11111000; //7
-    	4'b1000: seg = 8'b10000000; //8
-    	4'b1001: seg = 8'b10010000; //9
+		4'b0000: 
+		begin
+			sign24 = 0; //0
+			sign21 = 1;
+			sign22 = 1;
+			sign23 = 1;
+			sign25 = 1;
+			sign26 = 1;
+			sign27 = 1;
+		end
+    	4'b0001: 
+		begin
+			sign21 = 0;
+			sign22 = 0;
+			sign23 = 1;
+			sign24 = 0;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 0;
+		end
+    	4'b0010: 
+		begin
+			sign21 = 1;
+			sign22 = 0;
+			sign23 = 1;
+			sign24 = 1;
+			sign25 = 1
+			sign26 = 0;
+			sign27 = 1;
+		end
+    	4'b0011: 
+		begin
+			sign21 = 1;
+			sign22 = 0;
+			sign23 = 1;
+			sign24 = 1;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 1;
+		end
+    	4'b0100: 
+		begin
+			sign21 = 0;
+			sign22 = 1;
+			sign23 = 1;
+			sign24 = 1;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 1;
+		end
+    	4'b0101: 
+		begin
+			sign21 = 1;
+			sign22 = 1;
+			sign23 = 0;
+			sign24 = 1;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 1;
+		end
+    	4'b0110: 
+		begin
+			sign21 = 1;
+			sign22 = 1;
+			sign23 = 0;
+			sign24 = 1;
+			sign25 = 1;
+			sign26 = 1;
+			sign27 = 1;
+		end
+    	4'b0111: 
+		begin
+			sign21 = 1;
+			sign22 = 0;
+			sign23 = 1;
+			sign24 = 0;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 0;
+		end
+    	4'b1000:
+		begin
+			sign21 = 0;
+			sign22 = 1;
+			sign23 = 1;
+			sign24 = 1;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 1; 
+		end
+    	4'b1001: 
+		begin
+			sign21 = 1;
+			sign22 = 1;
+			sign23 = 1;
+			sign24 = 1;
+			sign25 = 0;
+			sign26 = 1;
+			sign27 = 0;
+		end
 	endcase
 	case(ones)
-	4'b0000: seg = 8'b11000000; //0
-    	4'b0001: seg = 8'b11111001; //1
-    	4'b0010: seg = 8'b10100100; //2
-    	4'b0011: seg = 8'b10110000; //3
-    	4'b0100: seg = 8'b10011001; //4
-    	4'b0101: seg = 8'b10010010; //5
-    	4'b0110: seg = 8'b10000010; //6
-    	4'b0111: seg = 8'b11111000; //7
-    	4'b1000: seg = 8'b10000000; //8
-    	4'b1001: seg = 8'b10010000; //9
+		4'b0000: 
+		begin
+			sign34 = 0; //0
+			sign31 = 1;
+			sign32 = 1;
+			sign33 = 1;
+			sign35 = 1;
+			sign36 = 1;
+			sign37 = 1;
+		end
+    	4'b0001: 
+		begin
+			sign31 = 0;
+			sign32 = 0;
+			sign33 = 1;
+			sign34 = 0;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 0;
+		end
+    	4'b0010: 
+		begin
+			sign31 = 1;
+			sign32 = 0;
+			sign33 = 1;
+			sign34 = 1;
+			sign35 = 1
+			sign36 = 0;
+			sign37 = 1;
+		end
+    	4'b0011: 
+		begin
+			sign31 = 1;
+			sign32 = 0;
+			sign33 = 1;
+			sign34 = 1;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 1;
+		end
+    	4'b0100: 
+		begin
+			sign31 = 0;
+			sign32 = 1;
+			sign33 = 1;
+			sign34 = 1;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 1;
+		end
+    	4'b0101: 
+		begin
+			sign31 = 1;
+			sign32 = 1;
+			sign33 = 0;
+			sign34 = 1;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 1;
+		end
+    	4'b0110: 
+		begin
+			sign01 = 1;
+			sign02 = 1;
+			sign03 = 0;
+			sign04 = 1;
+			sign05 = 1;
+			sign06 = 1;
+			sign07 = 1;
+		end
+    	4'b0111: 
+		begin
+			sign31 = 1;
+			sign32 = 0;
+			sign33 = 1;
+			sign34 = 0;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 0;
+		end
+    	4'b1000:
+		begin
+			sign31 = 0;
+			sign32 = 1;
+			sign33 = 1;
+			sign34 = 1;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 1; 
+		end
+    	4'b1001: 
+		begin
+			sign31 = 1;
+			sign32 = 1;
+			sign33 = 1;
+			sign34 = 1;
+			sign35 = 0;
+			sign36 = 1;
+			sign37 = 0;
+		end
 	endcase
 end
 

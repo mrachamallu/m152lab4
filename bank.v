@@ -10,7 +10,7 @@ input [3:0] randNum2;
 input [3:0] randNum3;
 input [3:0] randNum4;
 input rst;
-output reg[26:0] balance;
+output wire[26:0] balance;
 reg[26:0] balanceR;
 
 always @(posedge clk)
