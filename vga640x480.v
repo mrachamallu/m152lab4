@@ -88,10 +88,10 @@ reg ones;
 
 always @(posedge dclk)
 begin
-	thousands <= balance % 1000;
-	hundreds <= (balance - thousands * 1000) % 100;
-	tens <= (balance - thousands * 1000 - hundreds * 100) % 10;
-	ones <= (balance - thousands*1000 - hundreds *100 - tens*10);
+	thousands <= (balance / 1000);
+	hundreds <= (balance % 1000) / 100;
+	tens <= (balance % 1000 % 100) / 10;
+	ones <= (balance % 1000 % 100 % 10);
 	case(thousands)
 		4'b0000: 
 		begin
@@ -119,7 +119,7 @@ begin
 			sign02 = 0;
 			sign03 = 1;
 			sign04 = 1;
-			sign05 = 1
+			sign05 = 1;
 			sign06 = 0;
 			sign07 = 1;
 		end
@@ -221,7 +221,7 @@ begin
 			sign12 = 0;
 			sign13 = 1;
 			sign14 = 1;
-			sign15 = 1
+			sign15 = 1;
 			sign16 = 0;
 			sign17 = 1;
 		end
@@ -323,7 +323,7 @@ begin
 			sign22 = 0;
 			sign23 = 1;
 			sign24 = 1;
-			sign25 = 1
+			sign25 = 1;
 			sign26 = 0;
 			sign27 = 1;
 		end
@@ -425,7 +425,7 @@ begin
 			sign32 = 0;
 			sign33 = 1;
 			sign34 = 1;
-			sign35 = 1
+			sign35 = 1;
 			sign36 = 0;
 			sign37 = 1;
 		end
@@ -500,6 +500,111 @@ begin
 			sign37 = 0;
 		end
 	endcase
+	//win and lose
+	if (thousands == 0 && hundreds == 0 && tens == 0 && ones == 0)
+	begin
+		sign01 = 0; //U
+		sign02 = 1;
+		sign03 = 1;
+		sign04 = 0;
+		sign05 = 1;
+		sign06 = 1;
+		sign07 = 1;
+
+		sign11 = 1; //r
+		sign12 = 1;
+		sign13 = 0;
+		sign14 = 0;
+		sign15 = 1;
+		sign16 = 0;
+		sign17 = 0;
+
+		sign21 = 0; //b
+		sign22 = 1;
+		sign23 = 0;
+		sign24 = 1;
+		sign25 = 1;
+		sign26 = 1;
+		sign27 = 1; 
+
+		sign31 = 1; //r
+		sign32 = 1;
+		sign33 = 0;
+		sign34 = 0;
+		sign35 = 1;
+		sign36 = 0;
+		sign37 = 0;
+	end
+
+/*
+	if (thousands == 0 && hundreds == 0 && tens == 0 && ones == 0)
+	begin
+		sign01 = 0; //L
+		sign02 = 1;
+		sign03 = 0;
+		sign04 = 0;
+		sign05 = 1;
+		sign06 = 0;
+		sign07 = 1;
+
+		sign11 = 1; //O
+		sign12 = 1;
+		sign13 = 1;
+		sign14 = 0;
+		sign15 = 1;
+		sign16 = 1;
+		sign17 = 1;
+
+		sign21 = 1; //S
+		sign22 = 1;
+		sign23 = 0;
+		sign24 = 1;
+		sign25 = 0;
+		sign26 = 1;
+		sign27 = 1; 
+
+		sign31 = 1; //E
+		sign32 = 1;
+		sign33 = 0;
+		sign34 = 1;
+		sign35 = 1;
+		sign36 = 0;
+		sign37 = 1;	
+	end */
+
+	if (thousands == 1)
+	begin
+		sign01 = 0; //first half of W
+		sign02 = 1;
+		sign03 = 1;
+		sign04 = 0;
+		sign05 = 1;
+		sign06 = 1;
+		sign07 = 1;	
+
+		sign11 = 0; //second half of W
+		sign12 = 1;
+		sign13 = 1;
+		sign14 = 0;
+		sign15 = 1;
+		sign16 = 1;
+		sign17 = 1;	
+
+		sign21 = 0; //I
+		sign22 = 0;
+		sign23 = 1;
+		sign24 = 0;
+		sign25 = 0;
+		sign26 = 1;
+		sign27 = 0; 
+
+		sign31 = 1; //n
+		sign32 = 1;
+		sign33 = 1;
+		sign34 = 0;
+		sign35 = 1;
+		sign36 = 1;
+		sign37 = 0;						
 end
 
 	
@@ -564,8 +669,10 @@ begin
 		// while we're within the active horizontal range
 		// -----------------
 
+
+
 		////////////////////////////
-		////////ten's minute////////
+		////////thousand's digit////////
 		///////////////////////////
 
 		// display white bar
@@ -620,7 +727,7 @@ begin
 		end
 
 		//////////////////////////////////////////////////
-		///////////////ones minute///////////////////////
+		///////////////hundred's digit///////////////////////
 		/////////////////////////////////////////////////
 		// display yellow bar
 		//top middle
@@ -674,7 +781,7 @@ begin
 		end							
 
 		//////////////////////////////////////
-		////////tens second///////////////////
+		////////tens digit///////////////////
 		//////////////////////////////////////
 
 		// display cyan bar
@@ -728,7 +835,7 @@ begin
 			blue = 2'b11;
 		end		
         ///////////////////////////////
-        /////////////tens second///////
+        /////////////ones digit///////
         ///////////////////////////////
 		// display green bar
         //top middle
@@ -782,7 +889,7 @@ begin
 		end          
         
         /////////////////////////////////////
-        ////////ones second//////////////////
+        ////////ones digit//////////////////
         /////////////////////////////////////
 		// display magenta bar
         //top middle
@@ -875,8 +982,3 @@ begin
 end
 
 endmodule
-
-
-
-
-
